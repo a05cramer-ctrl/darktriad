@@ -54,7 +54,16 @@ function App() {
   }, [])
 
   const enterSite = () => {
+    // Restart all videos
+    const videos = document.querySelectorAll('.video-frame video') as NodeListOf<HTMLVideoElement>
+    videos.forEach(video => {
+      video.currentTime = 0
+      video.play()
+    })
+    
+    // Start audio
     if (audioRef.current) {
+      audioRef.current.currentTime = 0
       audioRef.current.volume = 0.5
       audioRef.current.play().then(() => {
         setIsPlaying(true)
