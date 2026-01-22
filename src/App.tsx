@@ -6,13 +6,31 @@ function App() {
   const audioRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.play().then(() => {
-        setIsPlaying(true)
-      }).catch(() => {
-        // Autoplay was blocked, user interaction required
-      })
+    const playAudio = async () => {
+      if (audioRef.current) {
+        try {
+          await audioRef.current.play()
+          setIsPlaying(true)
+        } catch (error) {
+          // Autoplay was blocked, wait for user interaction
+          const enableAudio = () => {
+            if (audioRef.current) {
+              audioRef.current.play().then(() => {
+                setIsPlaying(true)
+              }).catch(() => {})
+            }
+            document.removeEventListener('click', enableAudio)
+            document.removeEventListener('touchstart', enableAudio)
+            document.removeEventListener('keydown', enableAudio)
+          }
+          document.addEventListener('click', enableAudio, { once: true })
+          document.addEventListener('touchstart', enableAudio, { once: true })
+          document.addEventListener('keydown', enableAudio, { once: true })
+        }
+      }
     }
+    
+    playAudio()
   }, [])
 
   const togglePlay = () => {
@@ -136,7 +154,7 @@ function App() {
       </footer>
 
       {/* Audio Player */}
-      <audio ref={audioRef} src="/music.mp3" loop />
+      <audio ref={audioRef} src="/music.mp3" loop autoPlay />
       <button className="audio-toggle" onClick={togglePlay}>
         <span className="audio-icon">{isPlaying ? '◼' : '▶'}</span>
         <span className="audio-label">{isPlaying ? 'SILENCE' : 'TRANSMIT'}</span>
