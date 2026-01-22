@@ -1,15 +1,62 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import './App.css'
 
 function App() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [showIntro, setShowIntro] = useState(true)
+  const [audioData, setAudioData] = useState({ bass: 0, mid: 0, high: 0 })
   const audioRef = useRef<HTMLAudioElement>(null)
+  const audioContextRef = useRef<AudioContext | null>(null)
+  const analyserRef = useRef<AnalyserNode | null>(null)
+  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null)
+  const animationRef = useRef<number>(0)
+
+  const setupAudioAnalyser = () => {
+    if (!audioRef.current || audioContextRef.current) return
+
+    const audioContext = new (window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext)()
+    const analyser = audioContext.createAnalyser()
+    const source = audioContext.createMediaElementSource(audioRef.current)
+    
+    analyser.fftSize = 256
+    source.connect(analyser)
+    analyser.connect(audioContext.destination)
+    
+    audioContextRef.current = audioContext
+    analyserRef.current = analyser
+    sourceRef.current = source
+
+    const analyze = () => {
+      if (!analyserRef.current) return
+      
+      const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount)
+      analyserRef.current.getByteFrequencyData(dataArray)
+      
+      // Get bass (low frequencies), mid, and high
+      const bass = dataArray.slice(0, 10).reduce((a, b) => a + b, 0) / 10 / 255
+      const mid = dataArray.slice(10, 50).reduce((a, b) => a + b, 0) / 40 / 255
+      const high = dataArray.slice(50, 100).reduce((a, b) => a + b, 0) / 50 / 255
+      
+      setAudioData({ bass, mid, high })
+      animationRef.current = requestAnimationFrame(analyze)
+    }
+    
+    analyze()
+  }
+
+  useEffect(() => {
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
+  }, [])
 
   const enterSite = () => {
     if (audioRef.current) {
       audioRef.current.play().then(() => {
         setIsPlaying(true)
+        setupAudioAnalyser()
       }).catch(() => {})
     }
     setShowIntro(false)
@@ -21,6 +68,9 @@ function App() {
         audioRef.current.pause()
       } else {
         audioRef.current.play()
+        if (!audioContextRef.current) {
+          setupAudioAnalyser()
+        }
       }
       setIsPlaying(!isPlaying)
     }
@@ -63,15 +113,58 @@ function App() {
       <div className="bg-effects">
         <div className="grid-overlay"></div>
         <div className="floating-triangles">
-          <div className="triangle t1">◬</div>
-          <div className="triangle t2">◬</div>
-          <div className="triangle t3">◬</div>
-          <div className="triangle t4">◬</div>
-          <div className="triangle t5">◬</div>
+          <div 
+            className="triangle t1" 
+            style={{ 
+              transform: `translateY(${-audioData.bass * 50}px) scale(${1 + audioData.bass * 0.3})`,
+              opacity: 0.2 + audioData.bass * 0.4
+            }}
+          >◬</div>
+          <div 
+            className="triangle t2"
+            style={{ 
+              transform: `translateY(${-audioData.mid * 40}px) scale(${1 + audioData.mid * 0.25})`,
+              opacity: 0.2 + audioData.mid * 0.35
+            }}
+          >◬</div>
+          <div 
+            className="triangle t3"
+            style={{ 
+              transform: `translateY(${-audioData.high * 30}px) scale(${1 + audioData.high * 0.2})`,
+              opacity: 0.2 + audioData.high * 0.3
+            }}
+          >◬</div>
+          <div 
+            className="triangle t4"
+            style={{ 
+              transform: `translateY(${-audioData.bass * 35}px) rotate(${audioData.mid * 15}deg)`,
+              opacity: 0.2 + audioData.bass * 0.3
+            }}
+          >◬</div>
+          <div 
+            className="triangle t5"
+            style={{ 
+              transform: `translateY(${-audioData.mid * 45}px) rotate(${-audioData.high * 10}deg)`,
+              opacity: 0.2 + audioData.mid * 0.35
+            }}
+          >◬</div>
         </div>
         <div className="dark-mist mist-1"></div>
         <div className="dark-mist mist-2"></div>
-        <div className="radial-pulse"></div>
+        <div 
+          className="radial-pulse music-reactive"
+          style={{ 
+            transform: `translate(-50%, -50%) scale(${1 + audioData.bass * 0.5})`,
+            opacity: 0.4 + audioData.bass * 0.6
+          }}
+        ></div>
+        {/* Beat flash effect */}
+        <div 
+          className="beat-flash"
+          style={{ 
+            opacity: audioData.bass > 0.6 ? audioData.bass * 0.3 : 0
+          }}
+        ></div>
       </div>
       <div className="noise-overlay"></div>
       <div className="vignette"></div>
@@ -104,6 +197,8 @@ function App() {
                   loop 
                   autoPlay
                   playsInline
+                  preload="auto"
+                  disablePictureInPicture
                 />
                 <div className="scanlines"></div>
                 <div className="video-overlay">
