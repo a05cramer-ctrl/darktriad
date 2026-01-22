@@ -1,37 +1,19 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import './App.css'
 
 function App() {
   const [isPlaying, setIsPlaying] = useState(false)
+  const [showIntro, setShowIntro] = useState(true)
   const audioRef = useRef<HTMLAudioElement>(null)
 
-  useEffect(() => {
-    const playAudio = async () => {
-      if (audioRef.current) {
-        try {
-          await audioRef.current.play()
-          setIsPlaying(true)
-        } catch (error) {
-          // Autoplay was blocked, wait for user interaction
-          const enableAudio = () => {
-            if (audioRef.current) {
-              audioRef.current.play().then(() => {
-                setIsPlaying(true)
-              }).catch(() => {})
-            }
-            document.removeEventListener('click', enableAudio)
-            document.removeEventListener('touchstart', enableAudio)
-            document.removeEventListener('keydown', enableAudio)
-          }
-          document.addEventListener('click', enableAudio, { once: true })
-          document.addEventListener('touchstart', enableAudio, { once: true })
-          document.addEventListener('keydown', enableAudio, { once: true })
-        }
-      }
+  const enterSite = () => {
+    if (audioRef.current) {
+      audioRef.current.play().then(() => {
+        setIsPlaying(true)
+      }).catch(() => {})
     }
-    
-    playAudio()
-  }, [])
+    setShowIntro(false)
+  }
 
   const togglePlay = () => {
     if (audioRef.current) {
@@ -63,6 +45,20 @@ function App() {
 
   return (
     <div className="app">
+      {/* Intro Overlay */}
+      {showIntro && (
+        <div className="intro-overlay">
+          <div className="intro-content">
+            <h2 className="intro-title">THE DARK TRIAD</h2>
+            <p className="intro-subtitle">EMBRACE THE TRANSMISSION</p>
+            <button className="intro-button" onClick={enterSite}>
+              <span className="intro-button-icon">▶</span>
+              <span className="intro-button-text">ENTER</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Background Effects */}
       <div className="bg-effects">
         <div className="grid-overlay"></div>

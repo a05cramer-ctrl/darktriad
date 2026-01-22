@@ -35,6 +35,93 @@ body {
   background: linear-gradient(180deg, var(--black) 0%, var(--dark) 50%, var(--black) 100%);
 }
 
+/* Intro Overlay */
+.intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(3px);
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.intro-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.intro-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 8vw, 6rem);
+  letter-spacing: 0.2em;
+  color: var(--white);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  text-shadow: 0 0 40px rgba(255,255,255,0.3);
+}
+
+.intro-subtitle {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.4em;
+  color: var(--white-dim);
+  margin-bottom: 50px;
+  text-transform: uppercase;
+}
+
+.intro-button {
+  background: rgba(10, 10, 10, 0.9);
+  border: 2px solid var(--gray);
+  padding: 20px 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  backdrop-filter: blur(10px);
+}
+
+.intro-button:hover {
+  border-color: var(--white-dim);
+  background: rgba(20, 20, 20, 0.95);
+  transform: scale(1.05);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+
+.intro-button-icon {
+  font-size: 1.5rem;
+  color: var(--white);
+  transition: all 0.3s ease;
+}
+
+.intro-button:hover .intro-button-icon {
+  text-shadow: 0 0 20px rgba(255,255,255,0.5);
+  transform: scale(1.2);
+}
+
+.intro-button-text {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.3em;
+  color: var(--white-dim);
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+.intro-button:hover .intro-button-text {
+  color: var(--white);
+}
+
 /* Background Effects Container */
 .bg-effects {
   position: fixed;
