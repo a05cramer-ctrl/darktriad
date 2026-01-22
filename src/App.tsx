@@ -1,9 +1,19 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import './App.css'
 
 function App() {
   const [isPlaying, setIsPlaying] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.play().then(() => {
+        setIsPlaying(true)
+      }).catch(() => {
+        // Autoplay was blocked, user interaction required
+      })
+    }
+  }, [])
 
   const togglePlay = () => {
     if (audioRef.current) {
