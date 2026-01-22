@@ -5,6 +5,7 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [showIntro, setShowIntro] = useState(true)
   const [audioData, setAudioData] = useState({ bass: 0, mid: 0, high: 0 })
+  const [volume, setVolume] = useState(0.5)
   const audioRef = useRef<HTMLAudioElement>(null)
   const audioContextRef = useRef<AudioContext | null>(null)
   const analyserRef = useRef<AnalyserNode | null>(null)
@@ -74,6 +75,14 @@ function App() {
         }
       }
       setIsPlaying(!isPlaying)
+    }
+  }
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value)
+    setVolume(newVolume)
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume
     }
   }
 
