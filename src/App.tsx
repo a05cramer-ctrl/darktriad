@@ -54,6 +54,7 @@ function App() {
 
   const enterSite = () => {
     if (audioRef.current) {
+      audioRef.current.volume = 0.5
       audioRef.current.play().then(() => {
         setIsPlaying(true)
         setupAudioAnalyser()
@@ -245,7 +246,7 @@ function App() {
       </footer>
 
       {/* Audio Player */}
-      <audio ref={audioRef} src="/music.mp3" loop autoPlay />
+      <audio ref={audioRef} src="/music.mp3" loop />
       <button className="audio-toggle" onClick={togglePlay}>
         <span className="audio-icon">{isPlaying ? '◼' : '▶'}</span>
         <span className="audio-label">{isPlaying ? 'SILENCE' : 'TRANSMIT'}</span>
