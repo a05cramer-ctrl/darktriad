@@ -260,7 +260,16 @@ function App() {
 
       {/* Footer */}
       <footer className="footer">
-        <span>◬ DARK TRIAD ◬</span>
+        <span className="footer-title">◬ DARK TRIAD ◬</span>
+        <div className="footer-links">
+          <div className="footer-item">
+            <span className="footer-label">CA</span>
+            <span className="footer-value ca-address">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span>
+          </div>
+          <a href="https://x.com/DarkTriad75999" target="_blank" rel="noopener noreferrer" className="footer-item twitter-link">
+            <span className="footer-label">TWITTER</span>
+          </a>
+        </div>
       </footer>
 
       {/* Audio Player */}
