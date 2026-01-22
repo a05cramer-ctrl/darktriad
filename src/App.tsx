@@ -256,10 +256,25 @@ function App() {
 
       {/* Audio Player */}
       <audio ref={audioRef} src="/music.mp3" loop />
-      <button className="audio-toggle" onClick={togglePlay}>
-        <span className="audio-icon">{isPlaying ? '◼' : '▶'}</span>
-        <span className="audio-label">{isPlaying ? 'SILENCE' : 'TRANSMIT'}</span>
-      </button>
+      <div className="audio-controls">
+        <button className="audio-toggle" onClick={togglePlay}>
+          <span className="audio-icon">{isPlaying ? '◼' : '▶'}</span>
+          <span className="audio-label">{isPlaying ? 'SILENCE' : 'TRANSMIT'}</span>
+        </button>
+        <div className="volume-control">
+          <span className="volume-icon">🔊</span>
+          <input 
+            type="range" 
+            min="0" 
+            max="1" 
+            step="0.01" 
+            value={volume}
+            onChange={handleVolumeChange}
+            className="volume-slider"
+          />
+          <span className="volume-value">{Math.round(volume * 100)}%</span>
+        </div>
+      </div>
     </div>
   )
 }
