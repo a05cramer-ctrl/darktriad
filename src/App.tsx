@@ -6,6 +6,15 @@ function App() {
   const [showIntro, setShowIntro] = useState(true)
   const [audioData, setAudioData] = useState({ bass: 0, mid: 0, high: 0 })
   const [volume, setVolume] = useState(0.5)
+  const [copied, setCopied] = useState(false)
+
+  const contractAddress = 'EJNX9p1eePw1nKDEtN13x7Dk4x4KgNdvAU6muTUqpump'
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(contractAddress)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
   const audioRef = useRef<HTMLAudioElement>(null)
   const audioContextRef = useRef<AudioContext | null>(null)
   const analyserRef = useRef<AnalyserNode | null>(null)
@@ -262,9 +271,9 @@ function App() {
       <footer className="footer">
         <span className="footer-title">◬ DARK TRIAD ◬</span>
         <div className="footer-links">
-          <div className="footer-item">
-            <span className="footer-label">CA</span>
-            <span className="footer-value ca-address">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span>
+          <div className="footer-item ca-item" onClick={copyToClipboard}>
+            <span className="footer-label">CA {copied && <span className="copied-text">COPIED!</span>}</span>
+            <span className="footer-value ca-address">{contractAddress}</span>
           </div>
           <a href="https://x.com/DarkTriad75999" target="_blank" rel="noopener noreferrer" className="footer-item twitter-link">
             <span className="footer-label">TWITTER</span>

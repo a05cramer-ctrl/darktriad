@@ -749,6 +749,10 @@ body {
   transition: color 0.3s ease;
 }
 
+.ca-item {
+  cursor: pointer;
+}
+
 .ca-address {
   font-family: monospace;
   font-size: 0.65rem;
@@ -756,13 +760,20 @@ body {
   padding: 8px 15px;
   background: var(--darker);
   border: 1px solid var(--gray);
-  cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.ca-address:hover {
+.ca-item:hover .ca-address {
   border-color: var(--white-dim);
   color: var(--white);
+  background: var(--gray-dark);
+}
+
+.copied-text {
+  font-size: 0.7rem;
+  color: #4ade80;
+  margin-left: 10px;
+  animation: fadeIn 0.3s ease;
 }
 
 .twitter-link:hover .footer-value {
