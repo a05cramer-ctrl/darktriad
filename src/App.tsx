@@ -8,7 +8,7 @@ function App() {
   const [volume, setVolume] = useState(0.5)
   const [copied, setCopied] = useState(false)
 
-  const contractAddress = 'DhiKYWiQ6Aqvjp9ZnJp5UTdDvaxfiiEFGdnnJdyJpump'
+  const contractAddress = '4jVp3XP7Tdp9q3Ub56E88ovDMkGuYvqEiQqonMC5pump'
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(contractAddress)
